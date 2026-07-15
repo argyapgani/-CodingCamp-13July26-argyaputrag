@@ -268,12 +268,15 @@ project-folder/
 │
 ├── index.html        ← Main page (open this in your browser)
 ├── css/
-│   └── style.css     ← All styling, light/dark themes, responsive layout
+│   └── style.css     ← Animations, dark mode overrides, and things Tailwind can't handle
 ├── js/
 │   └── script.js     ← All interactivity and localStorage logic
+├── .kiro/
+│   └── steering/
+│       └── project.md  ← Kiro project instructions
 └── README.md         ← This file
 ```
 
 ---
 
-*Built with HTML, CSS, and Vanilla JavaScript. No frameworks, no dependencies, no build step required.* 
+*Built with HTML, Tailwind CSS (CDN), and Vanilla JavaScript. No backend, no build step required.* 
