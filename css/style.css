@@ -43,6 +43,54 @@
   .dashboard-header { padding: 1rem 1.25rem; }
 }
 
+/* Daily quote banner */
+.quote-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 1280px;
+  margin: 1.25rem auto 0;
+  padding: 0.875rem 1.5rem;
+  background-color: #d6f0de;
+  border: 1px solid #b7dfc3;
+  border-radius: 12px;
+  /* side margins match dashboard-grid */
+  margin-left: auto;
+  margin-right: auto;
+  width: calc(100% - 5rem); /* 2 × 2.5rem padding */
+}
+@media (max-width: 1024px) { .quote-banner { width: calc(100% - 3rem); } }
+@media (max-width: 768px)  { .quote-banner { width: calc(100% - 2rem); flex-direction: column; align-items: flex-start; gap: 0.25rem; } }
+
+.quote-banner .quote-icon { font-size: 1.25rem; flex-shrink: 0; }
+
+.quote-text {
+  flex: 1;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: #132e1c;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.quote-author {
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 600;
+  color: #4a7a5a;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) { .quote-author { align-self: flex-end; } }
+
+/* Dark mode quote banner */
+[data-theme="dark"] .quote-banner {
+  background-color: #1e2038 !important;
+  border-color: #2e3346 !important;
+}
+[data-theme="dark"] .quote-text   { color: #f1f3f9 !important; }
+[data-theme="dark"] .quote-author { color: #9ca3af !important; }
+
 /* Main grid */
 .dashboard-grid {
   display: grid;
@@ -380,6 +428,16 @@
   animation: pulse 2s ease-in-out infinite;
 }
 .timer-display.finished { color: #f59e0b !important; }
+
+/* Todo list — 2 columns on desktop, 1 column on mobile */
+.todo-list-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: start;
+}
+@media (max-width: 768px) {
+  .todo-list-grid { grid-template-columns: 1fr; }
+}
 
 /* Todo item done state */
 .todo-item.done             { opacity: 0.65; }
