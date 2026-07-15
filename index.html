@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ───────────────── HEADER ───────────────── -->
+  <header class="header">
+    <div class="header-left">
+      <div id="clock" class="clock">00:00:00</div>
+      <div id="date" class="date">Monday, January 1, 2025</div>
+    </div>
+
+    <div class="header-center">
+      <h1 id="greeting" class="greeting">Good morning!</h1>
+      <p class="greeting-sub">
+        Welcome back, <span id="username" class="username-span">Friend</span>
+        <button id="edit-name-btn" class="icon-btn" title="Edit name">&#9998;</button>
+      </p>
+    </div>
+
+    <div class="header-right">
+      <button id="theme-toggle" class="theme-btn" title="Toggle light / dark mode">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ───────────────── NAME MODAL ───────────────── -->
+  <div id="name-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>What's your name?</h2>
+      <input id="name-input" type="text" placeholder="Enter your name" maxlength="30" />
+      <div class="modal-actions">
+        <button id="name-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="name-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MAIN GRID ───────────────── -->
+  <main class="dashboard">
+
+    <!-- ── FOCUS TIMER ── -->
+    <section class="card card-timer" aria-label="Focus Timer">
+      <h2 class="card-title">Focus Timer</h2>
+      <div class="timer-display" id="timer-display">25:00</div>
+      <div class="timer-mode-tabs">
+        <button class="mode-tab active" data-mode="focus">Focus 25m</button>
+        <button class="mode-tab" data-mode="short">Short 5m</button>
+        <button class="mode-tab" data-mode="long">Long 15m</button>
+      </div>
+      <div class="timer-controls">
+        <button id="timer-start" class="btn btn-primary">Start</button>
+        <button id="timer-stop" class="btn btn-secondary">Stop</button>
+        <button id="timer-reset" class="btn btn-ghost">Reset</button>
+      </div>
+      <p id="timer-status" class="timer-status">Ready to focus?</p>
+    </section>
+
+    <!-- ── TO-DO LIST ── -->
+    <section class="card card-todo" aria-label="To-Do List">
+      <div class="card-header-row">
+        <h2 class="card-title">To-Do List</h2>
+        <div class="todo-sort">
+          <label for="sort-select" class="sr-only">Sort tasks</label>
+          <select id="sort-select" class="sort-select">
+            <option value="default">Sort: Default</option>
+            <option value="az">Sort: A → Z</option>
+            <option value="za">Sort: Z → A</option>
+            <option value="done-last">Done Last</option>
+            <option value="done-first">Done First</option>
+          </select>
+        </div>
+      </div>
+
+      <form id="todo-form" class="todo-form">
+        <input
+          id="todo-input"
+          type="text"
+          placeholder="Add a new task…"
+          maxlength="120"
+          autocomplete="off"
+        />
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+
+      <ul id="todo-list" class="todo-list">
+        <!-- tasks injected by JS -->
+      </ul>
+
+      <p id="todo-empty" class="todo-empty">No tasks yet. Add one above!</p>
+      <div class="todo-footer">
+        <span id="todo-count" class="todo-count">0 tasks</span>
+        <button id="clear-done" class="btn btn-ghost btn-sm">Clear done</button>
+      </div>
+    </section>
+
+    <!-- ── QUICK LINKS ── -->
+    <section class="card card-links" aria-label="Quick Links">
+      <div class="card-header-row">
+        <h2 class="card-title">Quick Links</h2>
+        <button id="add-link-btn" class="btn btn-primary btn-sm">+ Add Link</button>
+      </div>
+
+      <div id="links-grid" class="links-grid">
+        <!-- links injected by JS -->
+      </div>
+      <p id="links-empty" class="todo-empty">No links yet. Add one!</p>
+    </section>
+
+  </main>
+
+  <!-- ───────────────── ADD LINK MODAL ───────────────── -->
+  <div id="link-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 id="link-modal-title">Add Quick Link</h2>
+      <label class="modal-label">Name
+        <input id="link-name-input" type="text" placeholder="e.g. GitHub" maxlength="30" />
+      </label>
+      <label class="modal-label">URL
+        <input id="link-url-input" type="url" placeholder="https://github.com" />
+      </label>
+      <label class="modal-label">Emoji / Icon (optional)
+        <input id="link-icon-input" type="text" placeholder="🔗" maxlength="4" />
+      </label>
+      <div class="modal-actions">
+        <button id="link-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="link-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── EDIT TASK MODAL ───────────────── -->
+  <div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>Edit Task</h2>
+      <input id="edit-input" type="text" maxlength="120" />
+      <div class="modal-actions">
+        <button id="edit-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="edit-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
