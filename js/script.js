@@ -493,6 +493,8 @@ renderTodos();
 /** @type {{ id: string, name: string, url: string, icon: string }[]} */
 let links         = store.get('dashboard_links', getDefaultLinks());
 let editingLinkId = null;
+let linksPage     = 0;          // current page (0-indexed)
+const LINKS_PER_PAGE = 4;       // max tiles visible at once
 
 function getDefaultLinks() {
   return [
@@ -507,19 +509,37 @@ function saveLinks() {
   store.set('dashboard_links', links);
 }
 
+function totalLinkPages() {
+  return Math.max(1, Math.ceil(links.length / LINKS_PER_PAGE));
+}
+
 function renderLinks() {
-  const grid    = $('links-grid');
-  const emptyEl = $('links-empty');
+  const grid       = $('links-grid');
+  const emptyEl    = $('links-empty');
+  const pagination = $('links-pagination');
+  const prevBtn    = $('links-prev');
+  const nextBtn    = $('links-next');
+  const indicator  = $('links-page-indicator');
+
   grid.innerHTML = '';
 
   if (links.length === 0) {
-    emptyEl.style.display = 'block';
+    emptyEl.style.display    = 'block';
+    pagination.classList.add('hidden');
     return;
   }
 
   emptyEl.style.display = 'none';
 
-  links.forEach((link) => {
+  // Clamp current page in case links were deleted
+  const pages = totalLinkPages();
+  if (linksPage >= pages) linksPage = pages - 1;
+
+  // Slice to current page
+  const start    = linksPage * LINKS_PER_PAGE;
+  const pageLinks = links.slice(start, start + LINKS_PER_PAGE);
+
+  pageLinks.forEach((link) => {
     const item = document.createElement('div');
     item.className = `link-item relative flex flex-col items-center justify-center gap-1.5
                       px-2 py-3.5 bg-bg-input border border-border-col rounded-tile
@@ -543,7 +563,6 @@ function renderLinks() {
               title="Remove link" aria-label="Remove ${escapeHtml(link.name)}">&#10005;</button>
     `;
 
-    // Open link on main area click (not on buttons)
     item.addEventListener('click', (e) => {
       if (e.target.closest('.link-delete-btn') || e.target.closest('.link-edit-btn')) return;
       window.open(link.url, '_blank', 'noopener,noreferrer');
@@ -561,6 +580,16 @@ function renderLinks() {
 
     grid.appendChild(item);
   });
+
+  // Show / hide pagination bar
+  if (pages <= 1) {
+    pagination.classList.add('hidden');
+  } else {
+    pagination.classList.remove('hidden');
+    indicator.textContent    = `${linksPage + 1} / ${pages}`;
+    prevBtn.disabled         = linksPage === 0;
+    nextBtn.disabled         = linksPage >= pages - 1;
+  }
 }
 
 function deleteLink(id) {
@@ -568,6 +597,14 @@ function deleteLink(id) {
   saveLinks();
   renderLinks();
 }
+
+// Pagination button listeners
+$('links-prev').addEventListener('click', () => {
+  if (linksPage > 0) { linksPage--; renderLinks(); }
+});
+$('links-next').addEventListener('click', () => {
+  if (linksPage < totalLinkPages() - 1) { linksPage++; renderLinks(); }
+});
 
 /* ── Link Modal ── */
 function openLinkModal(id = null) {
@@ -617,6 +654,8 @@ function saveLink() {
     if (link) { link.name = name; link.url = url; link.icon = icon; }
   } else {
     links.push({ id: uid(), name, url, icon });
+    // Jump to last page so the new link is visible
+    linksPage = totalLinkPages() - 1;
   }
 
   saveLinks();
