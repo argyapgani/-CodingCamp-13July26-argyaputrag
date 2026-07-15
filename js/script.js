@@ -206,8 +206,8 @@ function applyCustomDuration() {
   // Must be at least 1 second
   const total = mins * 60 + secs;
   if (total < 1) {
-    $('custom-min').style.borderColor = 'var(--danger)';
-    $('custom-sec').style.borderColor = 'var(--danger)';
+    $('custom-min').style.borderColor = '#ef4444';
+    $('custom-sec').style.borderColor = '#ef4444';
     setTimeout(() => {
       $('custom-min').style.borderColor = '';
       $('custom-sec').style.borderColor = '';
@@ -354,7 +354,10 @@ function renderTodos() {
     emptyEl.style.display = 'none';
     sorted.forEach((todo) => {
       const li = document.createElement('li');
-      li.className = `todo-item${todo.done ? ' done' : ''}`;
+      li.className = `todo-item flex items-center gap-2.5 px-3 py-2.5
+                      bg-bg-input border border-border-col rounded-input
+                      hover:bg-bg-hover transition-colors duration-200
+                      ${todo.done ? 'done' : ''}`;
       li.dataset.id = todo.id;
 
       li.innerHTML = `
@@ -364,10 +367,17 @@ function renderTodos() {
           aria-label="Mark task as done"
           ${todo.done ? 'checked' : ''}
         />
-        <span class="todo-text">${escapeHtml(todo.text)}</span>
-        <div class="todo-actions">
-          <button class="icon-btn todo-edit-btn" title="Edit task">&#9998;</button>
-          <button class="icon-btn btn-danger todo-delete-btn" title="Delete task">&#128465;</button>
+        <span class="todo-text flex-1 text-sm text-txt-primary break-words
+                     ${todo.done ? 'line-through text-txt-muted' : ''}">
+          ${escapeHtml(todo.text)}
+        </span>
+        <div class="todo-actions flex gap-1 flex-shrink-0">
+          <button class="todo-edit-btn text-txt-muted hover:text-accent hover:bg-accent-light
+                         rounded p-0.5 text-base leading-none border-0 bg-transparent cursor-pointer
+                         transition-colors duration-200" title="Edit task">&#9998;</button>
+          <button class="todo-delete-btn text-txt-muted hover:text-danger hover:bg-danger-light
+                         rounded p-0.5 text-base leading-none border-0 bg-transparent cursor-pointer
+                         transition-colors duration-200" title="Delete task">&#128465;</button>
         </div>
       `;
 
@@ -511,14 +521,26 @@ function renderLinks() {
 
   links.forEach((link) => {
     const item = document.createElement('div');
-    item.className = 'link-item';
-    item.title     = link.url;
+    item.className = `link-item relative flex flex-col items-center justify-center gap-1.5
+                      px-2 py-3.5 bg-bg-input border border-border-col rounded-tile
+                      text-xs font-semibold text-txt-primary text-center cursor-pointer
+                      min-h-[72px] break-words
+                      hover:bg-accent-light hover:border-accent hover:text-accent
+                      hover:-translate-y-0.5 hover:shadow-lg
+                      transition-all duration-200`;
+    item.title = link.url;
 
     item.innerHTML = `
-      <button class="link-edit-btn" title="Edit link" aria-label="Edit ${escapeHtml(link.name)}">&#9998;</button>
-      <span class="link-icon">${escapeHtml(link.icon || '🔗')}</span>
+      <button class="link-edit-btn absolute top-1 left-1 text-txt-muted hover:text-accent
+                     hover:bg-accent-light rounded px-1 text-xs leading-none
+                     border-0 bg-transparent cursor-pointer transition-colors duration-200"
+              title="Edit link" aria-label="Edit ${escapeHtml(link.name)}">&#9998;</button>
+      <span class="link-icon text-2xl leading-none">${escapeHtml(link.icon || '🔗')}</span>
       <span class="link-label">${escapeHtml(link.name)}</span>
-      <button class="link-delete-btn" title="Remove link" aria-label="Remove ${escapeHtml(link.name)}">&#10005;</button>
+      <button class="link-delete-btn absolute top-1 right-1 text-txt-muted hover:text-danger
+                     hover:bg-danger-light rounded px-1 text-xs leading-none
+                     border-0 bg-transparent cursor-pointer transition-colors duration-200"
+              title="Remove link" aria-label="Remove ${escapeHtml(link.name)}">&#10005;</button>
     `;
 
     // Open link on main area click (not on buttons)
@@ -578,9 +600,8 @@ function saveLink() {
   const icon = $('link-icon-input').value.trim() || '🔗';
 
   if (!name || !url) {
-    // Highlight empty fields
-    if (!name) $('link-name-input').style.borderColor = 'var(--danger)';
-    if (!url)  $('link-url-input').style.borderColor  = 'var(--danger)';
+    if (!name) $('link-name-input').style.borderColor = '#ef4444';
+    if (!url)  $('link-url-input').style.borderColor  = '#ef4444';
     setTimeout(() => {
       $('link-name-input').style.borderColor = '';
       $('link-url-input').style.borderColor  = '';
