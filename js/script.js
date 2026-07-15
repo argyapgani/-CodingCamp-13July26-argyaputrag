@@ -147,6 +147,9 @@ let timerRemaining = timerTotal;
 let timerInterval  = null;
 let timerRunning   = false;
 
+// Restore saved custom duration (default 10 min)
+let customSeconds = store.get('dashboard_custom_timer', 10 * 60);
+
 const timerDisplay = $('timer-display');
 const timerStatus  = $('timer-status');
 
@@ -158,11 +161,31 @@ function renderTimer() {
   timerDisplay.textContent = formatTime(timerRemaining);
 }
 
+/** Show / hide the custom duration input row */
+function toggleCustomRow(show) {
+  const row = $('custom-timer-row');
+  row.classList.toggle('hidden', !show);
+  if (show) {
+    // Populate inputs from saved custom value
+    $('custom-min').value = Math.floor(customSeconds / 60);
+    $('custom-sec').value = customSeconds % 60;
+  }
+}
+
 function setTimerMode(mode) {
   stopTimer();
-  timerMode      = mode;
-  timerTotal     = TIMER_MODES[mode];
-  timerRemaining = timerTotal;
+  timerMode = mode;
+
+  if (mode === 'custom') {
+    toggleCustomRow(true);
+    timerTotal     = customSeconds;
+    timerRemaining = timerTotal;
+  } else {
+    toggleCustomRow(false);
+    timerTotal     = TIMER_MODES[mode];
+    timerRemaining = timerTotal;
+  }
+
   renderTimer();
   timerDisplay.classList.remove('running', 'finished');
   timerStatus.textContent = 'Ready to focus?';
@@ -172,12 +195,56 @@ function setTimerMode(mode) {
   });
 }
 
+/** Called when user clicks "Set" on the custom row */
+function applyCustomDuration() {
+  let mins = parseInt($('custom-min').value, 10) || 0;
+  let secs = parseInt($('custom-sec').value, 10) || 0;
+
+  // Clamp values
+  mins = Math.min(Math.max(mins, 0), 99);
+  secs = Math.min(Math.max(secs, 0), 59);
+
+  // Must be at least 1 second
+  const total = mins * 60 + secs;
+  if (total < 1) {
+    $('custom-min').style.borderColor = 'var(--danger)';
+    $('custom-sec').style.borderColor = 'var(--danger)';
+    setTimeout(() => {
+      $('custom-min').style.borderColor = '';
+      $('custom-sec').style.borderColor = '';
+    }, 1500);
+    timerStatus.textContent = '⚠️ Enter at least 1 second.';
+    return;
+  }
+
+  customSeconds  = total;
+  store.set('dashboard_custom_timer', customSeconds);
+
+  // Update display values in case they were clamped
+  $('custom-min').value = mins;
+  $('custom-sec').value = secs;
+
+  stopTimer();
+  timerTotal     = customSeconds;
+  timerRemaining = timerTotal;
+  renderTimer();
+  timerDisplay.classList.remove('running', 'finished');
+  timerStatus.textContent = `✅ Custom timer set to ${formatTime(customSeconds)}.`;
+}
+
+$('custom-set-btn').addEventListener('click', applyCustomDuration);
+
+// Allow Enter key inside custom inputs to trigger Set
+[$('custom-min'), $('custom-sec')].forEach((el) => {
+  el.addEventListener('keydown', (e) => { if (e.key === 'Enter') applyCustomDuration(); });
+});
+
 function startTimer() {
   if (timerRunning || timerRemaining === 0) return;
   timerRunning = true;
   timerDisplay.classList.add('running');
   timerDisplay.classList.remove('finished');
-  timerStatus.textContent = timerMode === 'focus'
+  timerStatus.textContent = (timerMode === 'focus' || timerMode === 'custom')
     ? '🔥 Stay focused!'
     : '☕ Take a break!';
 
@@ -190,7 +257,7 @@ function startTimer() {
       timerRunning = false;
       timerDisplay.classList.remove('running');
       timerDisplay.classList.add('finished');
-      timerStatus.textContent = timerMode === 'focus'
+      timerStatus.textContent = (timerMode === 'focus' || timerMode === 'custom')
         ? '✅ Session complete! Take a break.'
         : '✅ Break over! Back to work.';
       playDoneSound();

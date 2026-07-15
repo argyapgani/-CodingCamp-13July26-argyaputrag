@@ -338,6 +338,66 @@ body {
   border-color: var(--accent);
 }
 
+/* Custom timer row */
+.custom-timer-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  background: var(--accent-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  animation: slideIn 0.18s ease;
+}
+.custom-timer-row.hidden { display: none; }
+
+.custom-timer-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.custom-time-input {
+  width: 58px;
+  padding: 7px 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.custom-time-input:focus { border-color: var(--accent); }
+/* hide browser spin arrows */
+.custom-time-input::-webkit-inner-spin-button,
+.custom-time-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.custom-time-input[type=number] {
+  -moz-appearance: textfield; /* Firefox legacy */
+  appearance: textfield;
+}
+
+.custom-timer-sep {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding-bottom: 4px;
+}
+
 .timer-controls {
   display: flex;
   gap: 8px;

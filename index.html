@@ -53,7 +53,23 @@
         <button class="mode-tab active" data-mode="focus">Focus 25m</button>
         <button class="mode-tab" data-mode="short">Short 5m</button>
         <button class="mode-tab" data-mode="long">Long 15m</button>
+        <button class="mode-tab" data-mode="custom">Custom</button>
       </div>
+
+      <!-- Custom duration row — shown only when Custom tab is active -->
+      <div id="custom-timer-row" class="custom-timer-row hidden">
+        <label class="custom-timer-label">
+          <span>Min</span>
+          <input id="custom-min" type="number" min="0" max="99" value="10" class="custom-time-input" />
+        </label>
+        <span class="custom-timer-sep">:</span>
+        <label class="custom-timer-label">
+          <span>Sec</span>
+          <input id="custom-sec" type="number" min="0" max="59" value="0" class="custom-time-input" />
+        </label>
+        <button id="custom-set-btn" class="btn btn-primary btn-sm">Set</button>
+      </div>
+
       <div class="timer-controls">
         <button id="timer-start" class="btn btn-primary">Start</button>
         <button id="timer-stop" class="btn btn-secondary">Stop</button>
