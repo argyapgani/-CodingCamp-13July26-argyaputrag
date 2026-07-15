@@ -65,6 +65,51 @@ setInterval(updateClock, 1000);
 updateClock();
 
 /* ═══════════════════════════════════════════════════════════════
+   2. DAILY MOTIVATIONAL QUOTE
+   Fetched from ZenQuotes API (free, no key required).
+   Cached in LocalStorage for the day — only re-fetches when
+   the date changes, so it doesn't hit the API on every reload.
+═══════════════════════════════════════════════════════════════ */
+
+const QUOTE_CACHE_KEY = 'dashboard_quote';
+
+async function loadDailyQuote() {
+  const today     = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+  const cached    = store.get(QUOTE_CACHE_KEY);
+
+  // Use cached quote if it's from today
+  if (cached && cached.date === today) {
+    renderQuote(cached.text, cached.author);
+    return;
+  }
+
+  // Fetch a new quote
+  try {
+    // ZenQuotes returns random motivational quotes — free, no API key needed
+    const res  = await fetch('https://zenquotes.io/api/random');
+    const data = await res.json();
+    const text   = data[0].q;
+    const author = data[0].a;
+
+    store.set(QUOTE_CACHE_KEY, { date: today, text, author });
+    renderQuote(text, author);
+  } catch {
+    // Network failed — show a built-in fallback quote
+    renderQuote(
+      'The secret of getting ahead is getting started.',
+      'Mark Twain'
+    );
+  }
+}
+
+function renderQuote(text, author) {
+  $('quote-text').textContent   = `"${text}"`;
+  $('quote-author').textContent = `— ${author}`;
+}
+
+loadDailyQuote();
+
+/* ═══════════════════════════════════════════════════════════════
    3. USERNAME
 ═══════════════════════════════════════════════════════════════ */
 
