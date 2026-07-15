@@ -276,4 +276,4 @@ project-folder/
 
 ---
 
-*Built with HTML, CSS, and Vanilla JavaScript. No frameworks, no dependencies, no build step required.*
+*Built with HTML, CSS, and Vanilla JavaScript. No frameworks, no dependencies, no build step required.* 
